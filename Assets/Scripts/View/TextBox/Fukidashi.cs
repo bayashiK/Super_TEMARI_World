@@ -44,18 +44,17 @@ namespace TEMARI.View
             await ChangeFukidashiTransparencyAsync(1, 0.5f);
             isText = true;
             cts = new();
-            await UniTask.Delay(TimeSpan.FromSeconds(text.Length * TextSpeed * 1.5f), cancellationToken: cts.Token);
+            await UniTask.Delay(TimeSpan.FromSeconds(text.Length * TextSpeed * 2f), cancellationToken: cts.Token);
             isText = false;
             await ChangeFukidashiTransparencyAsync(0, 0.5f);
-            if (!IsTextFinish())
+            if (textInd == allText.Count)
             {
-                await UniTask.Delay(TimeSpan.FromMilliseconds(200), cancellationToken: cts.Token);
-                DisplayText(allText.ElementAt(textInd));
+                _textFinish.OnNext(Unit.Default);
             }
             else
             {
-                _textFinish.OnNext(Unit.Default);
-                this.gameObject.SetActive(false);
+                await UniTask.Delay(TimeSpan.FromMilliseconds(200), cancellationToken: cts.Token);
+                DisplayText(allText.ElementAt(textInd));
             }
         }
 
@@ -64,7 +63,7 @@ namespace TEMARI.View
         /// </summary>
         public override void SkipText()
         {
-            if (isText) cts.Cancel();
+            //if (isText) cts.Cancel();
         }
 
         /// <summary>
@@ -85,15 +84,6 @@ namespace TEMARI.View
         public override void OnDestroy()
         {
             if (sequence.IsActive()) sequence.Kill();
-        }
-
-        /// <summary>
-        /// テキストを最後まで表示しきっているならtrueを返す
-        /// </summary>
-        /// <returns></returns>
-        public override bool IsTextFinish()
-        {
-            return (textInd == allText.Count);
         }
 
         /// <summary>

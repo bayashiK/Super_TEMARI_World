@@ -23,7 +23,11 @@ namespace TEMARI.Presenter
         /// <summary>タイトルバック確認ダイアログ</summary>
         [SerializeField] private View.NoticeDialogue _backDialogue;
 
+        /// <summary>ステータスウィンドウ</summary>
         [SerializeField] private View.StatusWindowManager _statusWindowManager;
+
+        /// <summary>キャラクターマネージャー</summary>
+        [SerializeField] private View.CharacterManager _characterManager;
 
         [SerializeField] private View.CustomButton _endButton;
 
@@ -66,6 +70,21 @@ namespace TEMARI.Presenter
                 .Subscribe(_ => textManager.SetTextType(View.TextType.Talk, baseModel.AllText))
                 .AddTo(this);
 
+            //キャラクタークリック時
+            _characterManager.OnClicked
+                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
+                .Subscribe(_ => {
+                    if(textManager.CurrentTextType == View.TextType.None)
+                    {
+                        textManager.SetTextType(View.TextType.Fukidashi, baseModel.AllText);
+                    }
+                    else
+                    {
+                        textManager.OnClicked();
+                    }
+                })
+                .AddTo(this);
+
             _babanukiButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
                 .Subscribe(_ => { baseModel.BasicData.Fullness = -5; baseModel.BasicData.Money = 100; })
@@ -83,6 +102,10 @@ namespace TEMARI.Presenter
 
             //ヘッダーの表示初期化
             _headerManager.Init(baseModel.BasicData.Money.ToString("N0"), baseModel.BasicData.Fullness, baseModel.BasicData.Fullness / (float)DB.BasicData.MaxFullness);
+
+            //ステータスウィンドウの表示初期化
+            _statusWindowManager.Init(baseModel.BasicData.Affinity.ToString(), baseModel.BasicData.Weight.ToString(),
+                baseModel.BasicData.Attack.ToString(), baseModel.BasicData.Mental.ToString());
         }
     }
 }

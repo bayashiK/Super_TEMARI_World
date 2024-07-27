@@ -67,9 +67,9 @@ namespace TEMARI.DB
         protected Subject<int> _onFullnessChanged = new();
 
         [Header("体重")]
-        [SerializeField] private int _weight = 1;
+        [SerializeField] private int _weight = MinWeight;
         /// <summary> 体重 </summary>
-        public int Face
+        public int Weight
         {
             get { return _weight; }
             set { _weight = Mathf.Clamp(value + _weight, MinWeight, MaxWeight); }

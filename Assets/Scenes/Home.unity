@@ -663,6 +663,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1068958562}
+  - component: {fileID: 1068958564}
+  - component: {fileID: 1068958563}
   m_Layer: 5
   m_Name: Charactor
   m_TagString: Untagged
@@ -690,6 +692,31 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -20}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1068958563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068958561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5b7b4bcfbe17d24fafcb0fafc0cf185, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _image: {fileID: 379234874}
+--- !u!114 &1068958564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068958561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e93426b16d5454c89e8d47ccded1c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1454390408
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -854,6 +881,7 @@ MonoBehaviour:
   _backButton: {fileID: 2116659342374610426}
   _backDialogue: {fileID: 1830687224}
   _statusWindowManager: {fileID: 4248525542953652486}
+  _characterManager: {fileID: 1068958563}
   _endButton: {fileID: 646891825}
   _babanukiButton: {fileID: 306676728}
 --- !u!4 &1579769928

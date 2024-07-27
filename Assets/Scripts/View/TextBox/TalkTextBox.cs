@@ -64,7 +64,7 @@ namespace TEMARI.View
                     _nextText.DOFade(0, 0);
                 }
                 
-                if (IsTextFinish())
+                if (textInd == allText.Count)
                 {
                     _textFinish.OnNext(Unit.Default);
                     isText = false;
@@ -92,15 +92,6 @@ namespace TEMARI.View
                 isText = true;
                 DisplayText(allText.ElementAt(textInd));
             }
-        }
-
-        /// <summary>
-        /// テキストを最後まで表示しきっているならtrueを返す
-        /// </summary>
-        /// <returns></returns>
-        public override bool IsTextFinish()
-        {
-            return (textInd == allText.Count);
         }
 
         public override void OnDestroy()

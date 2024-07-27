@@ -52,10 +52,6 @@ namespace TEMARI.View
         /// <returns></returns>
         public async UniTask UpdateFullnessMeter(int value, float ratio)
         {
-            int previousValue = int.Parse(_fullnessText.text);
-            var sequence = DOTween.Sequence();
-            await sequence.Append(_fullnessMeter.DOFillAmount(ratio, 0.5f))
-                .Join(_fullnessText.DOCounter(previousValue, value, 0.5f, true));
             if (value == 0)
             {
                 _fullnessText.color = new Color32(255, 0, 0, 255);
@@ -71,6 +67,12 @@ namespace TEMARI.View
                 > 0.2f => _meterColor[1],
                 _ => _meterColor[2]
             };
+
+            int previousValue = int.Parse(_fullnessText.text);
+            var sequence = DOTween.Sequence();
+            await sequence.Append(_fullnessMeter.DOFillAmount(ratio, 0.5f))
+                .Join(_fullnessText.DOCounter(previousValue, value, 0.5f, true));
+
         }
     }
 }

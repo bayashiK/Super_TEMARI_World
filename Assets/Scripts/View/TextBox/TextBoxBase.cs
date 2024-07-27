@@ -53,12 +53,6 @@ namespace TEMARI.View
         /// <param name="active"></param>
         abstract public void SetActive(bool active);
 
-        /// <summary>
-        /// テキストを最後まで表示しきっているならtrueを返す
-        /// </summary>
-        /// <returns></returns>
-        abstract public bool IsTextFinish();
-
         abstract public void OnDestroy();
 
         /// <summary>

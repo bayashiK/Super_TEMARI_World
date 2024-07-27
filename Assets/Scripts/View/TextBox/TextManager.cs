@@ -19,8 +19,9 @@ namespace TEMARI.View
     /// </summary>
     public class TextManager : MonoBehaviour
     {
+
         /// <summary> 現在表示対象のテキスト種別 </summary>
-        private TextType _currentTextType;
+        public TextType CurrentTextType { get; private set; } = TextType.None;
 
         /// <summary> 会話テキストボックス </summary>
         [SerializeField] private TalkTextBox _talkTextBox;
@@ -31,14 +32,16 @@ namespace TEMARI.View
         /// <summary> 全種類のテキストボックス </summary>
         private TextBoxBase[] _allTextBox;
 
+        /*
         /// <summary> テキストを最後まで表示しきったか </summary>
         public IObservable<Unit> TextFinish => _textFinish;
         protected Subject<Unit> _textFinish = new();
+        */
 
         private void Awake()
         {
             _allTextBox = new TextBoxBase[] {_talkTextBox, _fukidashi};
-            _textFinish.AddTo(this);
+            //_textFinish.AddTo(this);
         }
 
         private void Start()
@@ -59,9 +62,15 @@ namespace TEMARI.View
         /// <param name="text"> 表示テキスト </param>
         public void SetTextType(TextType type, IReadOnlyCollection<string> text)
         {
-            _currentTextType = type;
-            SetAllText(text);
-            SetTextBoxActive(type);
+            if(CurrentTextType == TextType.None)
+            {
+                SetTextBoxActive(type);
+                SetAllText(text);
+            }
+            else if(type == TextType.None)
+            {
+                SetTextBoxActive(type);
+            }
         }
 
         /// <summary>
@@ -70,6 +79,7 @@ namespace TEMARI.View
         /// <param name="type"></param>
         private void SetTextBoxActive(TextType type)
         {
+            CurrentTextType = type;
             switch (type)
             {
                 case TextType.Talk:
@@ -104,7 +114,7 @@ namespace TEMARI.View
         /// </summary>
         public void OnClicked()
         {
-            if (_currentTextType != TextType.None)
+            if (CurrentTextType != TextType.None)
             {
                 GetCurrentTextBox()?.SkipText();
             }
@@ -125,7 +135,7 @@ namespace TEMARI.View
         /// <returns></returns>
         private TextBoxBase GetCurrentTextBox()
         {
-            return _currentTextType switch
+            return CurrentTextType switch
             {
                 TextType.Talk => _talkTextBox,
                 TextType.Fukidashi => _fukidashi,
