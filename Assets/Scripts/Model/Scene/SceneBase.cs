@@ -29,10 +29,6 @@ namespace TEMARI.Model
         /// <summary> データベースロード成否 </summary>
         public bool isLoadSucceeded = false;
         */
-        
-        /// <summary> テキスト表示フラグ </summary>
-        public IReadOnlyReactiveProperty<View.TextType> IsTextEnabled => isTextEnabled;
-        protected readonly ReactiveProperty<View.TextType> isTextEnabled = new ReactiveProperty<View.TextType>(View.TextType.None);
 
         /// <summary> 表示テキスト全文 </summary>
         public IReadOnlyCollection<string> AllText => allText;
@@ -69,7 +65,6 @@ namespace TEMARI.Model
             scenePanel = sceneCanvas.transform.Find("Panel").GetComponent<Image>();
             sceneText = sceneCanvas.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             sceneCanvas.SetActive(false);
-            isTextEnabled.AddTo(this);
             onError.AddTo(this);
             sceneName = SceneManager.GetActiveScene().name;
         }
@@ -174,15 +169,6 @@ namespace TEMARI.Model
                 sceneText.text = loadingText + "・・・";
                 await UniTask.Delay(TimeSpan.FromMilliseconds(150), cancellationToken: ct);
             }
-        }
-
-        /// <summary>
-        /// テキストの表示種別変更
-        /// </summary>
-        /// <returns></returns>
-        public void SetTextType(View.TextType type)
-        {
-            isTextEnabled.Value = type;
         }
     }
 }

@@ -251,7 +251,7 @@ namespace TEMARI.Model
                 BetType.Raise => new List<string>() { "Raise" },
                 _ => new List<string>() { "Drop" }
             };
-            isTextEnabled.Value = View.TextType.Fukidashi;
+            //isTextEnabled.Value = View.TextType.Fukidashi;
             return oBet;
         }
 
