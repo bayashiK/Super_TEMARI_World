@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bffd11ab099b26146bfdb7d605e3da22, type: 3}
   m_Name: BasicData
   m_EditorClassIdentifier: 
-  _coin: 0
-  _textSpeedInt: 1
-  _BGMVolume: 0.5
+  _money: 0
+  _affinity: 0
+  _fullness: 50
+  _weight: 1
+  _attack: 1
+  _mental: 0
+  _textSpeedInt: 2
+  _BGMVolume: 0.507229
   _SEVolume: 0.5

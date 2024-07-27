@@ -73,3 +73,6 @@ crashlytics-build.properties
 
 # Fontdata
 Assets/Fonts/
+
+# Sounddata
+Assets/MasterData/Sound
