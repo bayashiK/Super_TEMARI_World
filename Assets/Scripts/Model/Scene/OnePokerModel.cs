@@ -171,7 +171,7 @@ namespace TEMARI.Model
             }
             else
             {
-                if(basicData.Coin >= MinBet)
+                if(basicData.Money >= MinBet)
                 {
 
                 }
@@ -229,7 +229,7 @@ namespace TEMARI.Model
             }
             else if(bet == BetType.Drop)
             {
-                basicData.Coin = -amount;
+                basicData.Money = -amount;
                 IsBetting = false;
                 EndTurn();
             }

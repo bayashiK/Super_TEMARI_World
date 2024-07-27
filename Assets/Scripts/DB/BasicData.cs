@@ -11,76 +11,86 @@ namespace TEMARI.DB
     [CreateAssetMenu(fileName = "BasicData", menuName = "ScriptableObject/BasicData")]
     public class BasicData : ScriptableObject
     {
-        /// <summary> コイン最大所持数 </summary>
-        private static int MaxCoin = 999999;
-        /// <summary> 幸運最大値 </summary>
-        public static int MaxLuck = 20;
-        /// <summary> 表情筋最大値 </summary>
-        public static int MaxFace = 20;
-        /// <summary> 洞察力最大値 </summary>
-        public static int MaxInsight = 20;
-        /// <summary> 交渉力最大値 </summary>
-        public static int MaxNegotiation = 10;
+        /// <summary> マニー最大所持数 </summary>
+        public static readonly int MaxMoney = 999999;
+        /// <summary> 親愛度最大値 </summary>
+        public static readonly int MaxAffinity = 100;
+        /// <summary> 満腹度最大値 </summary>
+        public static readonly int MaxFullness = 50;
+        /// <summary> 体重最小値 </summary>
+        public static readonly int MinWeight = 51;
+        /// <summary> 体重最大値 </summary>
+        public static readonly int MaxWeight = 99;
+        /// <summary> 口撃力最大値 </summary>
+        public static readonly int MaxAttack = 100;
+        /// <summary> メンタル最大値 </summary>
+        public static readonly int MaxMental = 100;
 
-        [Header("コイン所持数")]
-        [SerializeField] private int _coin = 0;
-        /// <summary> コイン所持数 </summary>
-        public int Coin {
-            get { return _coin; }
+        [Header("マニー所持数")]
+        [SerializeField] private int _money = 0;
+        /// <summary> マニー所持数 </summary>
+        public int Money {
+            get { return _money; }
             set {
-                var addCoin = value + CalcCoinCoefficient(value);
-                _coin = Mathf.Clamp(addCoin + _coin, 0, MaxCoin);
-                _onCoinChanged.OnNext(_coin); 
+                _money = Mathf.Clamp(value + _money, 0, MaxMoney);
+                _onMoneyChanged.OnNext(_money); 
             }
         }
 
-        /// <summary> コイン所持数変化通知 </summary>
-        public IObservable<int> OnCoinChanged => _onCoinChanged;
-        protected Subject<int> _onCoinChanged = new();
+        /// <summary> マニー所持数変化通知 </summary>
+        public IObservable<int> OnMoneyChanged => _onMoneyChanged;
+        protected Subject<int> _onMoneyChanged = new();
 
-        [Header("幸運値")]
-        [SerializeField] private int _luck = 1;
-        /// <summary> 幸運値 </summary>
-        public int Luck
+        [Header("親愛度")]
+        [SerializeField] private int _affinity = 0;
+        /// <summary> 親愛度 </summary>
+        public int Affinity
         {
-            get { return _luck; }
-            set { _luck = Mathf.Clamp(value + _luck, 1, MaxLuck); }
+            get { return _affinity; }
+            set { _affinity = Mathf.Clamp(value + _affinity, 0, MaxAffinity); }
         }
 
-        [Header("表情筋")]
-        [SerializeField] private int _face = 1;
-        /// <summary> 表情筋 </summary>
+        [Header("満腹度")]
+        [SerializeField] private int _fullness = MaxFullness; 
+        /// <summary> 満腹度 </summary>
+        public int Fullness
+        {
+            get { return _fullness; }
+            set { 
+                _fullness = Mathf.Clamp(value + _fullness, 0, MaxFullness);
+                _onFullnessChanged.OnNext(_fullness);
+            }
+        }
+
+        /// <summary> 満腹度変化通知 </summary>
+        public IObservable<int> OnFullnessChanged => _onFullnessChanged;
+        protected Subject<int> _onFullnessChanged = new();
+
+        [Header("体重")]
+        [SerializeField] private int _weight = 1;
+        /// <summary> 体重 </summary>
         public int Face
         {
-            get { return _face; }
-            set { _face = Mathf.Clamp(value + _face, 1, MaxFace); }
+            get { return _weight; }
+            set { _weight = Mathf.Clamp(value + _weight, MinWeight, MaxWeight); }
         }
 
-        [Header("洞察力")]
-        [SerializeField] private int _insight = 1;
-        /// <summary> 洞察力 </summary>
-        public int Insight
+        [Header("口撃力")]
+        [SerializeField] private int _attack = 1;
+        /// <summary> 口撃力 </summary>
+        public int Attack
         {
-            get { return _insight; }
-            set { _insight = Mathf.Clamp(value + _insight, 1, MaxInsight); }
+            get { return _attack; }
+            set { _attack = Mathf.Clamp(value + _attack, 1, MaxAttack); }
         }
 
-        [Header("交渉力")]
-        [SerializeField] private int _negotiation = 0;
-        /// <summary> 交渉力 </summary>
-        public int Negotiotion
+        [Header("メンタル")]
+        [SerializeField] private int _mental = 0;
+        /// <summary> メンタル </summary>
+        public int Mental
         {
-            get { return _negotiation; }
-            set { _negotiation = Mathf.Clamp(value + _negotiation, 0, MaxNegotiation); }
-        }
-
-        /// <summary>
-        /// コイン獲得倍率計算
-        /// </summary>
-        /// <returns></returns>
-        public int CalcCoinCoefficient(int value)
-        {
-            return value > 0 ? (int)Mathf.Ceil(value * _negotiation * 0.1f) : 0;
+            get { return _mental; }
+            set { _mental = Mathf.Clamp(value + _mental, 0, MaxMental); }
         }
 
         /// <summary> テキスト表示スピード定義 </summary>

@@ -3,18 +3,23 @@ using System.Collections;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
-using TMPro;
 using Cysharp.Threading.Tasks;
 using TEMARI.Model;
+using DG.Tweening;
 
 namespace TEMARI.Presenter
 {
+    /// <summary>
+    /// ホーム画面プレゼンター
+    /// </summary>
     public class HomePresenter : PresenterBase
     {
-        [SerializeField] private TextMeshProUGUI _coinText;
+        /// <summary>ヘッダーマネージャー</summary>
+        [SerializeField] private View.HeaderManager _headerManager;
 
         /// <summary>タイトルバックボタン</summary>
         [SerializeField] private View.CustomButton _backButton;
+
         /// <summary>タイトルバック確認ダイアログ</summary>
         [SerializeField] private View.NoticeDialogue _backDialogue;
 
@@ -58,12 +63,17 @@ namespace TEMARI.Presenter
 
             _babanukiButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(async _ => await baseModel.ChangeSceneAsync("Babanuki"))
+                .Subscribe(_ => { baseModel.BasicData.Fullness = -5; baseModel.BasicData.Money = 100; })
                 .AddTo(this);
 
-            //コイン所持数変化
-            baseModel.BasicData.OnCoinChanged
-                .Subscribe(x => _coinText.text = x.ToString("N0"))
+            //マニー所持数変化
+            baseModel.BasicData.OnMoneyChanged
+                .Subscribe(async x => await _headerManager.UpdateMoneyDisp(x))
+                .AddTo(this);
+
+            //満腹度変化通知
+            baseModel.BasicData.OnFullnessChanged
+                .Subscribe(async x => await _headerManager.UpdateFullnessMeter(x, x / (float)DB.BasicData.MaxFullness))
                 .AddTo(this);
         }
     }
