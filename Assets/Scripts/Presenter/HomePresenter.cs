@@ -23,6 +23,8 @@ namespace TEMARI.Presenter
         /// <summary>タイトルバック確認ダイアログ</summary>
         [SerializeField] private View.NoticeDialogue _backDialogue;
 
+        [SerializeField] private View.StatusWindowManager _statusWindowManager;
+
         [SerializeField] private View.CustomButton _endButton;
 
         [SerializeField] private View.CustomButton _babanukiButton;
@@ -36,6 +38,9 @@ namespace TEMARI.Presenter
         protected override void Init()
         {
             base.Init();
+
+            baseModel.BasicData.Money = -1000;
+            baseModel.BasicData.Fullness = 50;
             
             //タイトルバック確認ダイアログ表示
             _backButton.OnButtonClicked
@@ -58,7 +63,7 @@ namespace TEMARI.Presenter
             //テキスト種別設定
             _endButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(_ => baseModel.SetTextType(View.TextType.Talk))
+                .Subscribe(_ => textManager.SetTextType(View.TextType.Talk, baseModel.AllText))
                 .AddTo(this);
 
             _babanukiButton.OnButtonClicked
@@ -75,6 +80,9 @@ namespace TEMARI.Presenter
             baseModel.BasicData.OnFullnessChanged
                 .Subscribe(async x => await _headerManager.UpdateFullnessMeter(x, x / (float)DB.BasicData.MaxFullness))
                 .AddTo(this);
+
+            //ヘッダーの表示初期化
+            _headerManager.Init(baseModel.BasicData.Money.ToString("N0"), baseModel.BasicData.Fullness, baseModel.BasicData.Fullness / (float)DB.BasicData.MaxFullness);
         }
     }
 }

@@ -85,7 +85,7 @@ namespace TEMARI.DB
         }
 
         [Header("メンタル")]
-        [SerializeField] private int _mental = 0;
+        [SerializeField] private int _mental = 10;
         /// <summary> メンタル </summary>
         public int Mental
         {
@@ -96,6 +96,7 @@ namespace TEMARI.DB
         /// <summary> テキスト表示スピード定義 </summary>
         public static ReadOnlyCollection<float> TextSpeed = Array.AsReadOnly(new float[] { 0.15f, 0.1f, 0.05f });
 
+        [Header("ゲーム設定")]
         /// <summary> 現在のテキスト表示スピード（定義のインデックス） </summary>
         [SerializeField] private int _textSpeedInt = 1;
         public int TextSpeedInt

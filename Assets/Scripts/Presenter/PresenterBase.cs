@@ -113,22 +113,8 @@ namespace TEMARI.Presenter
                 .Subscribe(_ => settingDialogue.SetDialogueActive(false))
                 .AddTo(this);
 
-            //会話テキストボックスの表示状態切り替え
-            baseModel.IsTextEnabled
-                .Subscribe(x => textManager.SetTextBoxActive(x, baseModel.AllText))
-                .AddTo(this);
-
-            //会話テキストを最後まで表示完了
-            textManager.TextFinish
-                .Subscribe(_ =>
-                {
-                    baseModel.SetTextType(View.TextType.None);
-                })
-                .AddTo(this);
-
             //画面クリックのテキスト飛ばし
             bgMouseManager.OnClicked
-                .Where(_ => baseModel.IsTextEnabled.Value != View.TextType.None)
                 .ThrottleFirst(TimeSpan.FromMilliseconds(200))
                 .Subscribe(_ => textManager.OnClicked())
                 .AddTo(this);

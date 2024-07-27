@@ -20,7 +20,7 @@ namespace TEMARI.View
     public class TextManager : MonoBehaviour
     {
         /// <summary> 現在表示対象のテキスト種別 </summary>
-        private TextType currentTextType;
+        private TextType _currentTextType;
 
         /// <summary> 会話テキストボックス </summary>
         [SerializeField] private TalkTextBox _talkTextBox;
@@ -44,11 +44,11 @@ namespace TEMARI.View
         private void Start()
         {
             _talkTextBox.TextFinish
-                .Subscribe(_ => _textFinish.OnNext(Unit.Default))
+                .Subscribe(_ => SetTextBoxActive(TextType.None))
                 .AddTo(this);
 
             _fukidashi.TextFinish
-                .Subscribe(_ => _textFinish.OnNext(Unit.Default))
+                .Subscribe(_ => SetTextBoxActive(TextType.None))
                 .AddTo(this);
         }
 
@@ -57,10 +57,19 @@ namespace TEMARI.View
         /// </summary>
         /// <param name="isEnabled"> 表示状態 </param>
         /// <param name="text"> 表示テキスト </param>
-        public void SetTextBoxActive(TextType type, IReadOnlyCollection<string> text)
+        public void SetTextType(TextType type, IReadOnlyCollection<string> text)
         {
-            currentTextType = type;
+            _currentTextType = type;
             SetAllText(text);
+            SetTextBoxActive(type);
+        }
+
+        /// <summary>
+        /// テキストボックス表示状態変更
+        /// </summary>
+        /// <param name="type"></param>
+        private void SetTextBoxActive(TextType type)
+        {
             switch (type)
             {
                 case TextType.Talk:
@@ -95,7 +104,10 @@ namespace TEMARI.View
         /// </summary>
         public void OnClicked()
         {
-            GetCurrentTextBox()?.SkipText();
+            if (_currentTextType != TextType.None)
+            {
+                GetCurrentTextBox()?.SkipText();
+            }
         }
 
         /// <summary>
@@ -113,7 +125,7 @@ namespace TEMARI.View
         /// <returns></returns>
         private TextBoxBase GetCurrentTextBox()
         {
-            return currentTextType switch
+            return _currentTextType switch
             {
                 TextType.Talk => _talkTextBox,
                 TextType.Fukidashi => _fukidashi,
