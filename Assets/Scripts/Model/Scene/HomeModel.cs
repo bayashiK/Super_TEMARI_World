@@ -8,6 +8,9 @@ namespace TEMARI.Model
     /// </summary>
     public class HomeModel : SceneBase
     {
-        
+        /// <summary> アイテムデータベース </summary>
+        [SerializeField] protected DB.ItemData itemData;
+        /// <summary> アイテムデータベース </summary>
+        public DB.ItemData ItemData { get { return itemData; } }
     }
 }

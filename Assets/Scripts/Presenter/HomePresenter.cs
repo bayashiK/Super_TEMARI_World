@@ -21,7 +21,7 @@ namespace TEMARI.Presenter
         [SerializeField] private View.CustomButton _backButton;
 
         /// <summary>タイトルバック確認ダイアログ</summary>
-        [SerializeField] private View.NoticeDialogue _backDialogue;
+        [SerializeField] private View.NoticeDialogue _noticeDialogue;
 
         /// <summary>ステータスウィンドウ</summary>
         [SerializeField] private View.StatusWindowManager _statusWindowManager;
@@ -29,9 +29,16 @@ namespace TEMARI.Presenter
         /// <summary>キャラクターマネージャー</summary>
         [SerializeField] private View.CharacterManager _characterManager;
 
+        /// <summary>アイテムビューア</summary>
+        [SerializeField] private View.ItemViewer _itemViewer;
+
         [SerializeField] private View.CustomButton _endButton;
 
         [SerializeField] private View.CustomButton _babanukiButton;
+
+        [SerializeField] private View.CustomButton _itemButton;
+
+        [SerializeField] private View.CustomButton _gearButton;
 
         protected override void Start()
         {
@@ -43,25 +50,22 @@ namespace TEMARI.Presenter
         {
             base.Init();
 
-            baseModel.BasicData.Money = -1000;
+            var homeModel = (Model.HomeModel)baseModel;
+            homeModel.ItemData.InitList();
+            baseModel.BasicData.Money = 0;
             baseModel.BasicData.Fullness = 50;
             
             //タイトルバック確認ダイアログ表示
             _backButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(_ => _backDialogue.SetDialogueActive(true))
-                .AddTo(this);
-
-            //タイトルへ戻る
-            _backDialogue.OnButtonClicked
-                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(async _ => await baseModel.ChangeSceneAsync("Title"))
-                .AddTo(this);
-
-            //タイトルバック確認ダイアログ非表示
-            _backDialogue.CloseDialogue
-                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(_ => _backDialogue.SetDialogueActive(false))
+                .Subscribe(_ => { 
+                    _noticeDialogue.OpenDialogue("タイトルに戻ります");
+                    _noticeDialogue.OnButtonClicked
+                        .ThrottleFirst(TimeSpan.FromMilliseconds(500))
+                        .Subscribe(async _ => await baseModel.ChangeSceneAsync("Title"))
+                        .AddTo(this)
+                        .AddTo(_noticeDialogue.cancellationToken);
+                })
                 .AddTo(this);
 
             //テキスト種別設定
@@ -72,7 +76,7 @@ namespace TEMARI.Presenter
 
             //キャラクタークリック時
             _characterManager.OnClicked
-                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
+                .ThrottleFirst(TimeSpan.FromMilliseconds(200))
                 .Subscribe(_ => {
                     if(textManager.CurrentTextType == View.TextType.None)
                     {
@@ -87,7 +91,42 @@ namespace TEMARI.Presenter
 
             _babanukiButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(_ => { baseModel.BasicData.Fullness = -5; baseModel.BasicData.Money = 100; })
+                .Subscribe(_ => { baseModel.BasicData.Fullness -= 5; baseModel.BasicData.Money += 100; })
+                .AddTo(this);
+
+            _itemButton.OnButtonClicked
+                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
+                .Subscribe(_ =>
+                {
+                    _itemViewer.OpenViewer(homeModel.ItemData.ItemList);
+                })
+                .AddTo(this);
+
+            _gearButton.OnButtonClicked
+                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
+                .Subscribe(_ =>
+                {
+                    //homeModel.ItemData.AddList();
+                })
+                .AddTo(this);
+
+            _itemViewer.OnButtonClicked
+                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
+                .Subscribe(name =>
+                {
+                    //アイテム使用確認ダイアログ表示
+                    _noticeDialogue.OpenDialogue("アイテムを使用します");
+                    _noticeDialogue.OnButtonClicked
+                        .ThrottleFirst(TimeSpan.FromMilliseconds(500))
+                        .Subscribe(_ =>
+                        {
+                            homeModel.ItemData.UseItem(name);
+                            _noticeDialogue.CloseDialogue().Forget();
+                            _itemViewer.UpdateDisp(homeModel.ItemData.ItemList);
+                        })
+                        .AddTo(this)
+                        .AddTo(_noticeDialogue.cancellationToken);
+                })
                 .AddTo(this);
 
             //マニー所持数変化

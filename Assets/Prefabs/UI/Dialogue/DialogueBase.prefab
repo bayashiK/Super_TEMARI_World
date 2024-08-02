@@ -52,6 +52,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgMouseManager: {fileID: 5213652631240592304}
   dialogue: {fileID: 5344549201771641179}
+  caption: {fileID: 2089380407612627496}
+  mainText: {fileID: 604331582835180261}
+  closeButton: {fileID: 7897851443662031981}
 --- !u!1 &4639869137283798299
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,6 +639,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93158e6cd753e54408494db0816a4d7f, type: 3}
+--- !u!114 &7897851443662031981 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7164484313491487441, guid: 93158e6cd753e54408494db0816a4d7f, type: 3}
+  m_PrefabInstance: {fileID: 1078491770952398524}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8388d0c278d7e64a8d24adabd88985a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8474282521887461394 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8893801686316607150, guid: 93158e6cd753e54408494db0816a4d7f, type: 3}

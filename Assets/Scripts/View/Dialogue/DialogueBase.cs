@@ -22,51 +22,61 @@ namespace TEMARI.View
         protected RectTransform dialogueRect;
 
         /// <summary> ダイアログ見出し </summary>
-        protected TextMeshProUGUI caption;
+        [SerializeField] protected TextMeshProUGUI caption;
         /// <summary> ダイアログ本文 </summary>
-        protected TextMeshProUGUI mainText;
+        [SerializeField] protected TextMeshProUGUI mainText;
 
         /// <summary> 閉じるボタン </summary>
-        protected CustomButton closeButton;
+        [SerializeField] protected CustomButton closeButton;
         protected CloseButtonView closeButtonView;
 
+        /// <summary> 元スケール </summary>
+        protected float originalScale;
+
         /// <summary> ダイアログを閉じるイベント </summary>
-        public IObservable<Unit> CloseDialogue => Observable.Merge(closeButton.OnButtonClicked, bgMouseManager.OnClicked);
+        protected IObservable<Unit> dialogueClosed => Observable.Merge(closeButton.OnButtonClicked, bgMouseManager.OnClicked);
 
         protected virtual void Awake()
         {
             dialogueRect = dialogue.GetComponent<RectTransform>();
-            closeButton = dialogue.transform.Find("CloseButton").GetComponent<CustomButton>();
-            caption = dialogue.transform.Find("Caption").GetComponent<TextMeshProUGUI>();
-            mainText = dialogue.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             closeButtonView = closeButton.GetComponent<CloseButtonView>();
         }
 
         protected virtual void Start()
         {
+            originalScale = dialogueRect.localScale.x;
+
+            //閉じるボタンクリック時ダイアログ非表示
+            dialogueClosed
+                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
+                .Subscribe(_ => CloseDialogue().Forget())
+                .AddTo(this);
+
             this.gameObject.SetActive(false);
         }
 
         /// <summary>
-        /// ダイアログのアクティブ状態設定
+        /// ダイアログオープン
         /// </summary>
-        /// <param name="active"></param>
-        public virtual async void SetDialogueActive(bool active)
+        /// <returns></returns>
+        public virtual async UniTask OpenDialogue()
         {
-            if (active)
-            {
-                SoundManager.Instance.PlaySE(SoundManager.SEType.PopUp);
-                this.gameObject.SetActive(active);
-                closeButtonView.SetDefaultColor();
-                dialogueRect.localScale = Vector2.zero;
-                await dialogueRect.DOScale(1, 0.15f).SetEase(Ease.OutBack, 1);
-            }
-            else
-            {
-                SoundManager.Instance.PlaySE(SoundManager.SEType.Cancel);
-                await dialogueRect.DOScale(0, 0.15f).SetEase(Ease.Linear);
-                this.gameObject.SetActive(active);
-            }
+            SoundManager.Instance.PlaySE(SoundManager.SEType.PopUp);
+            this.gameObject.SetActive(true);
+            closeButtonView.SetDefaultColor();
+            dialogueRect.localScale = Vector2.zero;
+            await dialogueRect.DOScale(originalScale, 0.15f).SetEase(Ease.OutBack, 1);
+        }
+
+        /// <summary>
+        /// ダイアログクローズ
+        /// </summary>
+        /// <returns></returns>
+        public virtual async UniTask CloseDialogue()
+        {
+            SoundManager.Instance.PlaySE(SoundManager.SEType.Cancel);
+            await dialogueRect.DOScale(0, 0.15f).SetEase(Ease.Linear);
+            this.gameObject.SetActive(false);
         }
 
         /// <summary>

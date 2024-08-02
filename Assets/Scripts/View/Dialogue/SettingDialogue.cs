@@ -18,7 +18,7 @@ namespace TEMARI.View
         [SerializeField] protected Text previewText;
         private string[] _testMessage = new string[] 
         {
-            "――足を引っ張ったら、殺すから。", "……足を引っ張らないでくださいね？", "くっ……！『足を引っ張るなよ雑魚が』って？", 
+            "――足を引っ張ったら、殺すから。", "くっ……！『足を引っ張るなよ雑魚が』って？", "ま、また脅す気？\n簡単に従うと思わないで！",
             "……うっ……うっ……\n痛くて歩けない……おぶってぇ……","5キロも増えてませんっ！！！", "なっ……な、ななな…………ッお……\nお母さんぶらないでくれる！？",
             "（私の魂はカツ丼に惹かれている\n　それは、間違いない……）", "ああああああ！そんなことよりっ！\nシャワールームで毛虫見たよ！",
             "早く実力つけろ。できないならやめろ。", "まあ、過ぎたことはいいよ", "スマホ、没収されちゃった。", "……うわ、また落ちこぼれたちが変なことしてる",
@@ -67,14 +67,14 @@ namespace TEMARI.View
         }
 
         /// <summary>
-        /// ダイアログのアクティブ状態設定（呼び出し時にテキストリセット）
+        /// ダイアログオープン（呼び出し時にテキストリセット）
         /// </summary>
         /// <param name="active"></param>
-        public override void SetDialogueActive(bool active)
+        public override async UniTask OpenDialogue()
         {
             previewText.text = "";
             if (DOTween.IsTweening(previewText)) previewText.DOKill();
-            base.SetDialogueActive(active);
+            await base.OpenDialogue();
         }
 
         /// <summary>

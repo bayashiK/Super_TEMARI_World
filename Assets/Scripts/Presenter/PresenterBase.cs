@@ -80,7 +80,7 @@ namespace TEMARI.Presenter
             //設定ダイアログ表示
             settingButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(_ => settingDialogue.SetDialogueActive(true))
+                .Subscribe(_ => settingDialogue.OpenDialogue().Forget())
                 .AddTo(this);
 
             //テキスト表示スピード変更
@@ -105,12 +105,6 @@ namespace TEMARI.Presenter
                     baseModel.BasicData.SEVolume = x;
                     Model.SoundManager.Instance.SetSEVolume(baseModel.BasicData.SEVolume);
                 })
-                .AddTo(this);
-
-            //設定ダイアログ閉じる
-            settingDialogue.CloseDialogue
-                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(_ => settingDialogue.SetDialogueActive(false))
                 .AddTo(this);
 
             //画面クリックのテキスト飛ばし
