@@ -78,6 +78,9 @@ namespace TEMARI.Presenter
             _characterManager.OnClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(200))
                 .Subscribe(_ => {
+                    var face = (View.Face)UnityEngine.Random.Range(0, 7);
+                    _characterManager.ChangeFace(face);
+
                     if(textManager.CurrentTextType == View.TextType.None)
                     {
                         textManager.SetTextType(View.TextType.Fukidashi, baseModel.AllText);

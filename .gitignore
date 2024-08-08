@@ -76,3 +76,6 @@ Assets/Fonts/
 
 # Sounddata
 Assets/MasterData/Sound
+
+# CharacterBase
+Assets/MasterData/Sprites/Character/base.png

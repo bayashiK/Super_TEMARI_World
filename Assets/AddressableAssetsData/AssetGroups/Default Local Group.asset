@@ -22,6 +22,56 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 22d9dd51df06a324e9130a18a28810f4
+    m_Address: Character/base.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5a4c8730b0d732349844db92b64a17d9
+    m_Address: Character/default.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f749a3adb392f924e9d195dc272bca86
+    m_Address: Character/face_fear.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4b1fa372fd5f2048bb8fbf724091e66
+    m_Address: Character/face_jitome.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1a96dd6522f6399419821365e1a589f5
+    m_Address: Character/face_kirakira.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4cccb27a44dd7a14ba62623249cc8859
+    m_Address: Character/face_normal.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d2209e23607bba64897bd5068b20030d
+    m_Address: Character/face_sad.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c212338861195a3498e88e01c6ba89fe
+    m_Address: Character/face_smile.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 767040a7ec22b65439b76d9c88a70d45
+    m_Address: Character/face_tere.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2713a9b507107ee4b978cccdeb107dab
+    m_Address: Character/hand.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8d4fa8c51e3b47442a4b1e1c0f372711, type: 2}
   m_SchemaSet:
