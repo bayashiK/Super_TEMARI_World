@@ -6,6 +6,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TEMARI.Model;
 using DG.Tweening;
+using TEMARI.View;
 
 namespace TEMARI.Presenter
 {
@@ -23,11 +24,11 @@ namespace TEMARI.Presenter
         /// <summary>タイトルバック確認ダイアログ</summary>
         [SerializeField] private View.NoticeDialogue _noticeDialogue;
 
-        /// <summary>ステータスウィンドウ</summary>
-        [SerializeField] private View.StatusWindowManager _statusWindowManager;
-
         /// <summary>キャラクターマネージャー</summary>
-        [SerializeField] private View.CharacterManager _characterManager;
+        [SerializeField] private CharacterManager _characterManager;
+
+        /// <summary>ステータスウィンドウ</summary>
+        //[SerializeField] private View.StatusWindowManager _statusWindowManager;
 
         /// <summary>アイテムビューア</summary>
         [SerializeField] private View.ItemViewer _itemViewer;
@@ -52,13 +53,14 @@ namespace TEMARI.Presenter
 
             var homeModel = (Model.HomeModel)baseModel;
             homeModel.ItemData.InitList();
+            //homeModel.TextData.InitList();
             baseModel.BasicData.Money = 0;
             baseModel.BasicData.Fullness = 50;
-            
+
             //タイトルバック確認ダイアログ表示
             _backButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(_ => { 
+                .Subscribe(_ => {
                     _noticeDialogue.OpenDialogue("タイトルに戻ります");
                     _noticeDialogue.OnButtonClicked
                         .ThrottleFirst(TimeSpan.FromMilliseconds(500))
@@ -71,19 +73,20 @@ namespace TEMARI.Presenter
             //テキスト種別設定
             _endButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(_ => textManager.SetTextType(View.TextType.Talk, baseModel.AllText))
+                .Subscribe(_ => {
+                    var showText = homeModel.TextData.GetShowText(0, DB.TextTag.None);
+                    textManager.SetTextType(showText);
+                })
                 .AddTo(this);
 
             //キャラクタークリック時
             _characterManager.OnClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(200))
                 .Subscribe(_ => {
-                    var face = (View.Face)UnityEngine.Random.Range(0, 7);
-                    _characterManager.ChangeFace(face);
-
-                    if(textManager.CurrentTextType == View.TextType.None)
+                    if (textManager.CurrentTextType == TextType.None)
                     {
-                        textManager.SetTextType(View.TextType.Fukidashi, baseModel.AllText);
+                        var showText = homeModel.TextData.GetShowText(1, DB.TextTag.None);
+                        textManager.SetTextType(showText);
                     }
                     else
                     {
@@ -126,6 +129,7 @@ namespace TEMARI.Presenter
                             homeModel.ItemData.UseItem(name);
                             _noticeDialogue.CloseDialogue().Forget();
                             _itemViewer.UpdateDisp(homeModel.ItemData.ItemList);
+                            _characterManager.ChangeFace(Face.Kirakira);
                         })
                         .AddTo(this)
                         .AddTo(_noticeDialogue.cancellationToken);
@@ -146,8 +150,8 @@ namespace TEMARI.Presenter
             _headerManager.Init(baseModel.BasicData.Money.ToString("N0"), baseModel.BasicData.Fullness, baseModel.BasicData.Fullness / (float)DB.BasicData.MaxFullness);
 
             //ステータスウィンドウの表示初期化
-            _statusWindowManager.Init(baseModel.BasicData.Affinity.ToString(), baseModel.BasicData.Weight.ToString(),
-                baseModel.BasicData.Attack.ToString(), baseModel.BasicData.Mental.ToString());
+            //_statusWindowManager.Init(baseModel.BasicData.Affinity.ToString(), baseModel.BasicData.Weight.ToString(),
+                //baseModel.BasicData.Attack.ToString(), baseModel.BasicData.Mental.ToString());
         }
     }
 }

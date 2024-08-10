@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 7874844534945602659}
   - component: {fileID: 5660356458646652433}
   - component: {fileID: 3917866825949898098}
+  - component: {fileID: 6995552765641833411}
   m_Layer: 5
   m_Name: Base
   m_TagString: Untagged
@@ -163,6 +164,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48e93426b16d5454c89e8d47ccded1c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6995552765641833411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771626067393040682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79a0ad320bd93824d8d0c0974ae57065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6846108638157936360
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,6 +245,7 @@ MonoBehaviour:
   _clothes: {fileID: 3536987956455156217}
   _face: {fileID: 2373475312506038695}
   _hand: {fileID: 8289536884872483902}
+  _physicsShapeRaycastFilter: {fileID: 0}
 --- !u!1 &8052681719210116524
 GameObject:
   m_ObjectHideFlags: 0

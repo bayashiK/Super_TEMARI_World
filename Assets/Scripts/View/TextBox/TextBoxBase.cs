@@ -18,7 +18,8 @@ namespace TEMARI.View
         protected IReadOnlyCollection<string> allText;
 
         /// <summary> テキスト表示インデックス </summary>
-        protected int textInd = 0;
+        public IReadOnlyReactiveProperty<int> TextInd => textInd;
+        protected readonly IntReactiveProperty textInd = new(-1);
 
         /// <summary> テキスト表示スピード </summary>
         public float TextSpeed { get; set; }
@@ -26,9 +27,6 @@ namespace TEMARI.View
         /// <summary> テキストを最後まで表示しきったか </summary>
         public IObservable<Unit> TextFinish => _textFinish;
         protected Subject<Unit> _textFinish = new();
-
-        /// <summary> 会話テキストを表示可能か </summary>
-        protected bool isText = false;
 
         protected virtual void Awake()
         {
@@ -62,7 +60,7 @@ namespace TEMARI.View
         public void SetAllText(IReadOnlyCollection<string> text)
         {
             allText = text;
-            textInd = 0;
+            textInd.Value = 0;
         }
     }
 }

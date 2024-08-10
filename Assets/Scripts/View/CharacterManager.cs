@@ -41,9 +41,16 @@ namespace TEMARI.View
         private Sprite _smile;
         private Sprite _tere;
 
+        private Vector2 _overviewPos = new Vector2(0, -50);
+        private Vector2 _overviewScale = new Vector2(1.03f, 1.03f);
+        private Vector2 _focusPos = new Vector2(0, -130);
+        private Vector2 _focusScale = new Vector2(1.2f, 1.2f);
+
         /// <summary> クリック時 </summary>
         public IObservable<Unit> OnClicked => _observableEvenTrigger
-            .OnPointerClickAsObservable().AsUnitObservable();
+            .OnPointerClickAsObservable()
+            //.Where(pointer => _physicsShapeRaycastFilter.IsRaycastLocationValid(pointer.pressPosition, _mainCamera))
+            .AsUnitObservable();
 
         void Awake()
         {
@@ -52,6 +59,7 @@ namespace TEMARI.View
 
         async void Start()
         {
+            //_mainCamera = Camera.main;
             _handleList.Add(Addressables.LoadAssetAsync<Sprite>("Character/face_normal.png"));
             _handleList.Add(Addressables.LoadAssetAsync<Sprite>("Character/face_fear.png"));
             _handleList.Add(Addressables.LoadAssetAsync<Sprite>("Character/face_jitome.png"));

@@ -24,6 +24,9 @@ namespace TEMARI.View
         /// <summary> テキスト表示完了した際の▼マーク </summary>
         private Text _nextText;
 
+        /// <summary> テキスト送り可能か </summary>
+        private bool isSkip = false;
+
         protected override void Awake()
         {
             _charaName = transform.Find("CharaName").GetComponent<TextMeshProUGUI>();
@@ -39,7 +42,6 @@ namespace TEMARI.View
         protected override async void DisplayText(string text)
         {
             _talkText.text = "";
-            textInd++;
             await _talkText.DOText(text, text.Length * TextSpeed).SetEase(Ease.Linear);
             _ = _nextText.DOFade(1, 0.4f).SetLoops(-1, LoopType.Yoyo);
         }
@@ -49,7 +51,7 @@ namespace TEMARI.View
         /// </summary>
         public override void SkipText()
         {
-            if (!isText) return;
+            if (!isSkip) { return; }
 
             if (DOTween.IsTweening(_talkText)) //テキスト送り中
             {
@@ -58,19 +60,20 @@ namespace TEMARI.View
             }
             else
             {
+                textInd.Value++;
                 if (DOTween.IsTweening(_nextText))
                 {
                     _nextText.DOKill();
                     _nextText.DOFade(0, 0);
                 }
                 
-                if (textInd == allText.Count)
+                if (textInd.Value == allText.Count)
                 {
                     _textFinish.OnNext(Unit.Default);
-                    isText = false;
+                    SetActive(false);
                     return;
                 }
-                DisplayText(allText.ElementAt(textInd));
+                DisplayText(allText.ElementAt(textInd.Value));
             }
         }
 
@@ -85,12 +88,12 @@ namespace TEMARI.View
             {
                 _talkText.text = "";
                 await _nextText.DOFade(0, 0);
-                isText = false;
+                isSkip = false;
                 this.rectTransform.localScale = Vector2.zero;
                 await this.rectTransform.DOScale(1, 0.1f);
                 await UniTask.Delay(TimeSpan.FromMilliseconds(200));
-                isText = true;
-                DisplayText(allText.ElementAt(textInd));
+                isSkip = true;
+                DisplayText(allText.ElementAt(textInd.Value));
             }
         }
 

@@ -39,22 +39,21 @@ namespace TEMARI.View
         /// <param name="text"></param>
         protected override async void DisplayText(string text)
         {
-            textInd++;
             _fukidashiText.text = text;
             await ChangeFukidashiTransparencyAsync(1, 0.5f);
-            isText = true;
             cts = new();
             await UniTask.Delay(TimeSpan.FromSeconds(text.Length * TextSpeed * 2f), cancellationToken: cts.Token);
-            isText = false;
             await ChangeFukidashiTransparencyAsync(0, 0.5f);
-            if (textInd == allText.Count)
+            textInd.Value++;
+            if (textInd.Value == allText.Count)
             {
                 _textFinish.OnNext(Unit.Default);
+                SetActive(false);
             }
             else
             {
                 await UniTask.Delay(TimeSpan.FromMilliseconds(200), cancellationToken: cts.Token);
-                DisplayText(allText.ElementAt(textInd));
+                DisplayText(allText.ElementAt(textInd.Value));
             }
         }
 
@@ -75,9 +74,8 @@ namespace TEMARI.View
             this.gameObject.SetActive(active);
             if (active)
             {
-                isText = false;
                 await ChangeFukidashiTransparencyAsync(0, 0);
-                DisplayText(allText.ElementAt(textInd));
+                DisplayText(allText.ElementAt(textInd.Value));
             }
         }
 

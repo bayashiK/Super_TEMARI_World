@@ -15,11 +15,11 @@ namespace TEMARI.DB
 
         public void InitList()
         {
-            _itemList = new List<Item>
-            {
-                new Item(ItemType.Item, "アイテム1", "アイテム1\n説明文", 1), new Item(ItemType.Item, "アイテム2", "アイテム2\n説明文", 2),
-                new Item(ItemType.Item, "アイテム3", "アイテム3\n説明文", 3), new Item(ItemType.Item, "アイテム4", "アイテム4\n説明文", 4)
-            };
+            _itemList.Clear();
+            _itemList.Add(new Item(ItemType.Item, "アイテム1", "アイテム1\n説明文", 1));
+            _itemList.Add(new Item(ItemType.Item, "アイテム2", "アイテム2\n説明文", 2));
+            _itemList.Add(new Item(ItemType.Item, "アイテム3", "アイテム3\n説明文", 3));
+            _itemList.Add(new Item(ItemType.Item, "アイテム4", "アイテム4\n説明文", 4));
         }
 
         /// <summary>
@@ -77,7 +77,6 @@ namespace TEMARI.DB
         public ItemType Type 
         { 
             get {  return _type; }
-            private set {  _type = value; }
         }
 
         [SerializeField] private string _name;
@@ -85,7 +84,6 @@ namespace TEMARI.DB
         public string Name 
         {
             get { return _name; }
-            private set { _name = value; }
         }
 
         [SerializeField] private string _description;
@@ -93,7 +91,6 @@ namespace TEMARI.DB
         public string Description 
         {
             get { return _description; } 
-            private set { _description = value; }
         }
 
         [SerializeField] private int _possession;
