@@ -32,13 +32,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f749a3adb392f924e9d195dc272bca86
-    m_Address: Character/face_fear.png
+  - m_GUID: c4b1fa372fd5f2048bb8fbf724091e66
+    m_Address: Character/face_jitome.png
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c4b1fa372fd5f2048bb8fbf724091e66
-    m_Address: Character/face_jitome.png
+  - m_GUID: f749a3adb392f924e9d195dc272bca86
+    m_Address: Character/face_fear.png
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -69,6 +69,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2713a9b507107ee4b978cccdeb107dab
     m_Address: Character/hand.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 551bcdc63e9dd3c4eb0d39329fb6ac17
+    m_Address: Character/hair.png
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
