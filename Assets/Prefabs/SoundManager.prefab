@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443f76924b55c2547a537098dacc4c48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _basicData: {fileID: 11400000, guid: 3b486bf03122d284ebb28609642e7be1, type: 2}
   _audioClipBGM:
   - {fileID: 8300000, guid: ce3a36cb0da97d144ad34ea5d9afa213, type: 3}
   - {fileID: 8300000, guid: ba9ac137fd401f545aba8c5a0c554902, type: 3}

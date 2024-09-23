@@ -10,6 +10,7 @@ using System;
 using TMPro;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using TEMARI.DB;
 
 namespace TEMARI.Model
 {
@@ -18,6 +19,7 @@ namespace TEMARI.Model
     /// </summary>
     public class SceneBase : MonoBehaviour
     {
+        /// <summary> 基本データベース </summary>
         [SerializeField] protected DB.BasicData basicData;
         /// <summary> 基本データベース </summary>
         public DB.BasicData BasicData {  get { return basicData; } }
@@ -46,6 +48,16 @@ namespace TEMARI.Model
             sceneCanvas.SetActive(false);
             onError.AddTo(this);
             sceneName = SceneManager.GetActiveScene().name;
+            try
+            {
+                var type = (SoundManager.BGMType)Enum.Parse(typeof(SoundManager.BGMType), sceneName, true);
+                SoundManager.Instance.PlayBGM(type).Forget(); //現在のシーン名に対応するBGMを再生する
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex.ToString());
+                SoundManager.Instance.PlayBGM(SoundManager.BGMType.None).Forget(); //対応するBGMがない場合は再生を停止する
+            }
         }
 
         /// <summary>
@@ -56,14 +68,15 @@ namespace TEMARI.Model
         public async UniTask ChangeSceneAsync(string sceneName)
         {
             sceneCanvas.SetActive(true);
+            DisplayLoadingTextAsync(dct).Forget();
             var asyncLoad = SceneManager.LoadSceneAsync(sceneName);
             asyncLoad.allowSceneActivation = false;
-            DisplayLoadingTextAsync(dct).Forget();
+            var tasks = new List<UniTask>();
+            tasks.Add(asyncLoad.ToUniTask());
+            tasks.Add(scenePanel.DOFade(1, 0.3f).ToUniTask());
             //basicData.SaveChange();
-            await scenePanel.DOFade(1, 0.3f);
             asyncLoad.allowSceneActivation = true;
-            await asyncLoad;
-            
+            await tasks;
         }
 
         /// <summary>

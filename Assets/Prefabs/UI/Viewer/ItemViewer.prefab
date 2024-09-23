@@ -256,6 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5daa398beecaa04da05df2fcf9bdb6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemData: {fileID: 11400000, guid: be02b05ba4ab84345b7714f8de8b0cc8, type: 2}
   itemPrefab:
     m_AssetGUID: 2d1526a6e5ba7004cbd8611880790dae
     m_SubObjectName: 

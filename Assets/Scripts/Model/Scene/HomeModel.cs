@@ -10,10 +10,19 @@ namespace TEMARI.Model
     {
         [SerializeField] private DB.ItemData _itemData;
         /// <summary> アイテムデータベース </summary>
-        public DB.ItemData ItemData { get { return _itemData; } }
-
+        //public DB.ItemData ItemData { get { return _itemData; } }
+        /*
         [SerializeField] private DB.TextData _textData;
         /// <summary> テキストデータベース </summary>
         public DB.TextData TextData { get { return _textData; } }
+        */
+
+        protected override void Start()
+        {
+            base.Start();
+            _itemData.InitList();
+            basicData.Money = 0;
+            basicData.Fullness = 50;
+        }
     }
 }

@@ -125,8 +125,8 @@ namespace TEMARI.DB
         public static ReadOnlyCollection<float> TextSpeed = Array.AsReadOnly(new float[] { 0.15f, 0.1f, 0.05f });
 
         [Header("ゲーム設定")]
-        /// <summary> 現在のテキスト表示スピード（定義のインデックス） </summary>
         [SerializeField] private int _textSpeedInt = 1;
+        /// <summary> 現在のテキスト表示スピード（定義のインデックス） </summary>
         public int TextSpeedInt
         {
             get { return _textSpeedInt; }

@@ -1968,6 +1968,7 @@ MonoBehaviour:
   previewText: {fileID: 4732729525576976545}
   BGMVolumeSlider: {fileID: 2813890345581514985}
   SEVolumeSlider: {fileID: 9106245869317347582}
+  _basicData: {fileID: 11400000, guid: 3b486bf03122d284ebb28609642e7be1, type: 2}
 --- !u!224 &6983291322076128632 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1349026324814352227, guid: 128cda8401fe06b4ea25d0bbe923b635, type: 3}

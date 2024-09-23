@@ -11,12 +11,6 @@ namespace TEMARI.Presenter
     /// </summary>
     public class TitlePresenter : PresenterBase
     {
-        protected override void Start()
-        {
-            SoundManager.Instance.PlayBGM(SoundManager.BGMType.Title).Forget();
-            base.Start();
-        }
-
         protected override void Init()
         {
             base.Init();

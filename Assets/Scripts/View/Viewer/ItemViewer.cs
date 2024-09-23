@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using System.Linq;
+using TEMARI.Model;
 
 namespace TEMARI.View
 {
@@ -15,6 +16,9 @@ namespace TEMARI.View
     /// </summary>
     public class ItemViewer : MonoBehaviour
     {
+        /// <summary> アイテムデータベース </summary>
+        [SerializeField] protected DB.ItemData itemData;
+
         /// <summary> アイテムプレハブの参照 </summary>
         [SerializeField] protected AssetReferenceGameObject itemPrefab;
 
@@ -38,8 +42,11 @@ namespace TEMARI.View
         protected float originalScale;
 
         /// <summary> 各アイテムボタンクリック通知 </summary>
-        public IObservable<string> OnButtonClicked => _onButtonClicked;
-        private Subject<string> _onButtonClicked = new();
+        public IObservable<Unit> OnButtonClicked => _onButtonClicked;
+        private Subject<Unit> _onButtonClicked = new();
+
+        /// <summary> 選択中のアイテム名 </summary>
+        private string selectItemName;
 
         protected void Awake()
         {
@@ -65,12 +72,12 @@ namespace TEMARI.View
         /// ビューア表示
         /// </summary>
         /// <param name="active"></param>
-        public async void OpenViewer(IReadOnlyCollection<DB.Item> items)
+        public async void OpenViewer()
         {
             Model.SoundManager.Instance.PlaySE(Model.SoundManager.SEType.PopUp);
             this.gameObject.SetActive(true);
 
-            _ = InstantiateItemPrefab(items);
+            _ = InstantiateItemPrefab(itemData.ItemList);
 
             closeButtonView.SetDefaultColor();
             viewerRect.localScale = Vector2.zero;
@@ -108,7 +115,11 @@ namespace TEMARI.View
                     var buttonText = item.Type == DB.ItemType.Item ? "使用" : "装備";
                     itemView.SetDisp(item.Name, item.Description, item.Possession, buttonText);
                     itemView.OnButtonClicked
-                        .Subscribe(_ => _onButtonClicked.OnNext(item.Name)) //各アイテムのボタンに対し、クリック時に名前を通知するよう設定
+                        .Subscribe(_ =>
+                        {
+                            selectItemName = item.Name; //各アイテムのボタンクリック時にそのアイテム名を保持
+                            _onButtonClicked.OnNext(Unit.Default);
+                        })
                         .AddTo(this)
                         .AddTo(itemView.gameObject);
                     _prefabList.Add(item.Name, itemView);
@@ -120,9 +131,10 @@ namespace TEMARI.View
         /// 表示内容更新
         /// </summary>
         /// <param name="items"></param>
-        public void UpdateDisp(IReadOnlyCollection<DB.Item> items)
+        public void UpdateDisp()
         {
-            foreach(var item in items)
+            itemData.UseItem(selectItemName);
+            foreach (var item in itemData.ItemList)
             {
                 if (_prefabList.ContainsKey(item.Name))
                 {

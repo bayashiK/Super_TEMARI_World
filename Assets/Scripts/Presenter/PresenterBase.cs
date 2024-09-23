@@ -72,11 +72,6 @@ namespace TEMARI.Presenter
         /// </summary>
         protected virtual void Init()
         {
-            textManager.SetTextSpeed(baseModel.BasicData.GetTextSpeedValue());
-            Model.SoundManager.Instance.SetBGMVolume(baseModel.BasicData.BGMVolume);
-            Model.SoundManager.Instance.SetSEVolume(baseModel.BasicData.SEVolume);
-            settingDialogue.SetSliderValue(baseModel.BasicData.TextSpeedInt, baseModel.BasicData.BGMVolume, baseModel.BasicData.SEVolume);
-
             //設定ダイアログ表示
             settingButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
@@ -86,24 +81,21 @@ namespace TEMARI.Presenter
             //テキスト表示スピード変更
             settingDialogue.OnTextSpeedChanged
                 .Subscribe(x => {
-                    baseModel.BasicData.TextSpeedInt = (int)x;
-                    textManager.SetTextSpeed(baseModel.BasicData.GetTextSpeedValue());
+                    textManager.ChangeTextSpeed((int)x);
                 })
                 .AddTo(this);
 
             //BGM音量変更
             settingDialogue.OnBGMVolumeChanged
                 .Subscribe(x => {
-                    baseModel.BasicData.BGMVolume = x;
-                    Model.SoundManager.Instance.SetBGMVolume(baseModel.BasicData.BGMVolume);
+                    Model.SoundManager.Instance.ChangeBGMVolume(x);
                 })
                 .AddTo(this);
 
             //SE音量変更
             settingDialogue.OnSEVolumeChanged
                 .Subscribe(x => {
-                    baseModel.BasicData.SEVolume = x;
-                    Model.SoundManager.Instance.SetSEVolume(baseModel.BasicData.SEVolume);
+                    Model.SoundManager.Instance.ChangeSEVolume(x);
                 })
                 .AddTo(this);
 

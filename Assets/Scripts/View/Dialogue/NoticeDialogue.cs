@@ -23,6 +23,17 @@ namespace TEMARI.View {
         /// </summary>
         public IObservable<Unit> OnButtonClicked => button.OnButtonClicked;
 
+        protected override void Start()
+        {
+            //ボタンクリック時ダイアログ非表示
+            button.OnButtonClicked
+                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
+                .Subscribe(_ => CloseDialogue().Forget())
+                .AddTo(this);
+
+            base.Start();
+        }
+
         /// <summary>
         /// ダイアログオープン
         /// </summary>

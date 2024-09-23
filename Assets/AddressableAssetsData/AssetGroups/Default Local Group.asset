@@ -77,6 +77,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0f7e8222efb7c254eade9ce8c993e7ec
+    m_Address: Assets/Prefabs/UI/Battle/Word.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8d4fa8c51e3b47442a4b1e1c0f372711, type: 2}
   m_SchemaSet:

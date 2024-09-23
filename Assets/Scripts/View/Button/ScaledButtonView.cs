@@ -12,16 +12,15 @@ namespace TEMARI.View
     [RequireComponent(typeof(CustomButton))]
     public class ScaledButtonView : MonoBehaviour
     {
-        private Vector3 _defaultButtonScale;
         private Color32 _defaultButtonColor;
-        /// <summary>デフォルトのボタンスケール倍率</summary>
-        private const float DefaultScale = 1f;
         /// <summary>選択時のボタンスケール倍率</summary>
-        private const float PressedScale = 0.95f;
+        private float _pressedScale = 0.95f;
         /// <summary>ボタン有効時の不透明度</summary>
         private const byte ActiveImageAlpha = 255;
         /// <summary>ボタン無効時の不透明度</summary>
         private const byte InactiveImageAlpha = 127;
+
+        private Vector2 _defaultScale;
 
         private CustomButton _button;
         [SerializeField] private Image _image;
@@ -29,8 +28,8 @@ namespace TEMARI.View
 
         private void Start()
         {
-            _defaultButtonScale = _image.rectTransform.localScale;
             _defaultButtonColor = _image.color;
+            _defaultScale = this.transform.localScale;
             _button = GetComponent<CustomButton>();
 
             _button.OnButtonClicked.
@@ -38,11 +37,11 @@ namespace TEMARI.View
                 .AddTo(this);
 
             _button.OnButtonPressed
-                .Subscribe(_ => SetScale(PressedScale))
+                .Subscribe(_ => SetScale(_pressedScale))
                 .AddTo(this);
 
             _button.OnButtonReleased
-                .Subscribe(_ => SetScale(DefaultScale))
+                .Subscribe(_ => SetScale(1))
                 .AddTo(this);
 
             _button.IsActiveRP
@@ -56,8 +55,8 @@ namespace TEMARI.View
         /// <param name="scale"></param>
         private void SetScale(float scale)
         {
-            _image.rectTransform.localScale = _defaultButtonScale * scale;
-            //_image.rectTransform.localScale = Vector3.one * scale;
+            this.transform.localScale = _defaultScale * scale;
+            //_image.rectTransform.localScale = _defaultButtonScale * scale;
         }
 
         /// <summary>

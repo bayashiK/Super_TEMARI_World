@@ -46,8 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3799c0ec67f1d848909bcc6cd9a629a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _basicData: {fileID: 11400000, guid: 3b486bf03122d284ebb28609642e7be1, type: 2}
+  _textData: {fileID: 11400000, guid: c6f7471c0e8a43848a9a5b0098a404ae, type: 2}
   _talkTextBox: {fileID: 5624135876338345759}
   _fukidashi: {fileID: 6446013915700154561}
+  _characterManager: {fileID: 0}
 --- !u!1001 &7451841556787782626
 PrefabInstance:
   m_ObjectHideFlags: 0

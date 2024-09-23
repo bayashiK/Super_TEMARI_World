@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using UniRx;
+using TEMARI.DB;
+using TEMARI.Model;
 
 namespace TEMARI.View
 {
@@ -19,6 +21,11 @@ namespace TEMARI.View
     /// </summary>
     public class TextManager : MonoBehaviour
     {
+        /// <summary> 基本データベース </summary>
+        [SerializeField] private DB.BasicData _basicData;
+
+        /// <summary> テキストデータベース </summary>
+        [SerializeField] private DB.TextData _textData;
 
         /// <summary> 現在表示対象のテキスト種別 </summary>
         public TextType CurrentTextType { get; private set; } = TextType.None;
@@ -45,6 +52,8 @@ namespace TEMARI.View
 
         private void Start()
         {
+            SetTextSpeed();
+
             _talkTextBox.TextFinish
                 .Subscribe(_ => CurrentTextType = TextType.None)
                 .AddTo(this);
@@ -69,12 +78,12 @@ namespace TEMARI.View
         /// </summary>
         /// <param name="isEnabled"> 表示状態 </param>
         /// <param name="text"> 表示テキスト </param>
-        public void SetTextType(DB.ShowText showText)
+        public void SetTextType(TextType type)
         {
-            _faceList.Clear();
-            var type = (TextType)showText.Type;
             if (CurrentTextType == TextType.None)
             {
+                var showText = _textData.GetShowText((int)type, DB.TextTag.None);
+                _faceList.Clear();
                 var textList = new List<string>();
                 foreach(var text in showText.AllText)
                 {
@@ -88,24 +97,22 @@ namespace TEMARI.View
         }
 
         /// <summary>
+        /// テキスト表示スピード変更
+        /// </summary>
+        /// <param name="ind"></param>
+        public void ChangeTextSpeed(int ind)
+        {
+            _basicData.TextSpeedInt = ind;
+            SetTextSpeed();
+        }
+
+        /// <summary>
         /// テキストボックス表示状態変更
         /// </summary>
         /// <param name="type"></param>
         private void SetTextBoxActive(TextType type)
         {
             GetCurrentTextBox()?.SetActive(true);
-        }
-
-        /// <summary>
-        /// 全てのテキストボックスにテキスト表示スピード反映
-        /// </summary>
-        /// <param name="speed"></param>
-        public void SetTextSpeed(float speed)
-        {
-            foreach(var textBox in _allTextBox)
-            {
-                textBox.TextSpeed = speed;
-            }
         }
 
         /// <summary>
@@ -120,10 +127,22 @@ namespace TEMARI.View
         }
 
         /// <summary>
+        /// 全てのテキストボックスにテキスト表示スピード反映
+        /// </summary>
+        /// <param name="speed"></param>
+        private void SetTextSpeed()
+        {
+            foreach (var textBox in _allTextBox)
+            {
+                textBox.TextSpeed = _basicData.GetTextSpeedValue();
+            }
+        }
+
+        /// <summary>
         /// テキスト全文セット
         /// </summary>
         /// <param name="text"></param>
-        public void SetAllText(IReadOnlyCollection<string> text)
+        private void SetAllText(IReadOnlyCollection<string> text)
         {
             GetCurrentTextBox()?.SetAllText(text);
         }

@@ -41,21 +41,9 @@ namespace TEMARI.Presenter
 
         [SerializeField] private View.CustomButton _gearButton;
 
-        protected override void Start()
-        {
-            SoundManager.Instance.PlayBGM(SoundManager.BGMType.Home).Forget();
-            base.Start();
-        }
-
         protected override void Init()
         {
             base.Init();
-
-            var homeModel = (Model.HomeModel)baseModel;
-            homeModel.ItemData.InitList();
-            //homeModel.TextData.InitList();
-            baseModel.BasicData.Money = 0;
-            baseModel.BasicData.Fullness = 50;
 
             //タイトルバック確認ダイアログ表示
             _backButton.OnButtonClicked
@@ -74,8 +62,7 @@ namespace TEMARI.Presenter
             _endButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
                 .Subscribe(_ => {
-                    var showText = homeModel.TextData.GetShowText(0, DB.TextTag.None);
-                    textManager.SetTextType(showText);
+                    textManager.SetTextType(TextType.Talk);
                 })
                 .AddTo(this);
 
@@ -85,8 +72,7 @@ namespace TEMARI.Presenter
                 .Subscribe(_ => {
                     if (textManager.CurrentTextType == TextType.None)
                     {
-                        var showText = homeModel.TextData.GetShowText(1, DB.TextTag.None);
-                        textManager.SetTextType(showText);
+                        textManager.SetTextType(TextType.Fukidashi);
                     }
                     else
                     {
@@ -104,21 +90,22 @@ namespace TEMARI.Presenter
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
                 .Subscribe(_ =>
                 {
-                    _itemViewer.OpenViewer(homeModel.ItemData.ItemList);
+                    _itemViewer.OpenViewer();
                 })
                 .AddTo(this);
 
             _gearButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(_ =>
+                .Subscribe(async _ =>
                 {
                     //homeModel.ItemData.AddList();
+                    await baseModel.ChangeSceneAsync("Dungeon");
                 })
                 .AddTo(this);
 
             _itemViewer.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
-                .Subscribe(name =>
+                .Subscribe(_ =>
                 {
                     //アイテム使用確認ダイアログ表示
                     _noticeDialogue.OpenDialogue("アイテムを使用します");
@@ -126,9 +113,7 @@ namespace TEMARI.Presenter
                         .ThrottleFirst(TimeSpan.FromMilliseconds(500))
                         .Subscribe(_ =>
                         {
-                            homeModel.ItemData.UseItem(name);
-                            _noticeDialogue.CloseDialogue().Forget();
-                            _itemViewer.UpdateDisp(homeModel.ItemData.ItemList);
+                            _itemViewer.UpdateDisp();
                             _characterManager.ChangeFace(Face.Kirakira);
                         })
                         .AddTo(this)

@@ -4,6 +4,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TEMARI.DB;
 
 namespace TEMARI.View
 {
@@ -27,27 +28,32 @@ namespace TEMARI.View
         };
         /// <summary> テキスト表示スピード変更時 </summary>
         public IObservable<float> OnTextSpeedChanged => textSpeedSlider
-            .OnValueChangedAsObservable();
+            .OnValueChangedAsObservable().Skip(1);  //初期化時の値(0)は通知しない
 
         /// <summary> BGM音量変更スライダー </summary>
         [SerializeField] protected Slider BGMVolumeSlider;
         /// <summary> BGM音量変更時 </summary>   
         public IObservable<float> OnBGMVolumeChanged => BGMVolumeSlider
-            .OnValueChangedAsObservable();
+            .OnValueChangedAsObservable().Skip(1);  //初期化時の値(0)は通知しない
 
         /// <summary> SE音量変更スライダー </summary>
         [SerializeField] protected Slider SEVolumeSlider;
         /// <summary> SE音量変更時 </summary>
         public IObservable<float> OnSEVolumeChanged => SEVolumeSlider
-            .OnValueChangedAsObservable();
+            .OnValueChangedAsObservable().Skip(1);  //初期化時の値(0)は通知しない
+
+        /// <summary> 基本データベース </summary>
+        [SerializeField] private DB.BasicData _basicData;
 
         protected override void Start()
         {
-            base.Start();
+            SetSliderValue();
 
             OnTextSpeedChanged
                 .Subscribe(x => PreviewTextSpeed((int)x))
                 .AddTo(this);
+
+            base.Start();
         }
 
         /// <summary>
@@ -81,11 +87,11 @@ namespace TEMARI.View
         /// スライダーの値セット
         /// </summary>
         /// <param name="speed"></param>
-        public void SetSliderValue(int textSpeed, float BGMVolume, float SEVolume)
+        private void SetSliderValue()
         {
-            textSpeedSlider.value = textSpeed;
-            BGMVolumeSlider.value = BGMVolume;
-            SEVolumeSlider.value = SEVolume;
+            textSpeedSlider.value = _basicData.TextSpeedInt;
+            BGMVolumeSlider.value = _basicData.BGMVolume;
+            SEVolumeSlider.value = _basicData.SEVolume;
         }
     }
 }

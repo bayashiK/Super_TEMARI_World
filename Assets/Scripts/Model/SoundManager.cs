@@ -15,7 +15,7 @@ namespace TEMARI.Model
         {
             Title = 0,
             Home,
-            Game,
+            Dungeon,
             None = 99
         }
 
@@ -31,6 +31,9 @@ namespace TEMARI.Model
         /// <summary> シングルトンインスタンス </summary>
         public static SoundManager Instance;
 
+        /// <summary> 基本データベース </summary>
+        [SerializeField] private DB.BasicData _basicData;
+
         /// <summary> BGMオーディオソース </summary>
         private AudioSource[] _audioSourceBGM = new AudioSource[2];
 
@@ -45,9 +48,6 @@ namespace TEMARI.Model
 
         /// <summary> クロスフェード時間 </summary>
         private readonly float CrossFadeTime = 1.0f;
-
-        /// <summary> BGM音量 </summary>
-        private float _BGMVolume = 0.5f;
 
         private void Awake()
         {
@@ -72,27 +72,54 @@ namespace TEMARI.Model
             }
         }
 
+        private void Start()
+        {
+            SetBGMVolume();
+            SetSEVolume();
+        }
+
         /// <summary>
         /// BGM音量セット
         /// </summary>
         /// <param name="value"></param>
-        public void SetBGMVolume(float value)
+        private void SetBGMVolume()
         {
-            _BGMVolume = value;
-            _audioSourceBGM[0].volume = value;
-            _audioSourceBGM[1].volume = value;
+            for (int i = 0; i < _audioSourceBGM.Length; i++)
+            {
+                _audioSourceBGM[i].volume = _basicData.BGMVolume;
+            }
         }
 
         /// <summary>
         /// SE音量セット
         /// </summary>
         /// <param name="value"></param>
-        public void SetSEVolume(float value)
+        private void SetSEVolume()
         {
             for (int i = 0; i < _audioSourceSE.Length; i++)
             {
-                _audioSourceSE[i].volume = value;
+                _audioSourceSE[i].volume = _basicData.SEVolume;
             }
+        }
+
+        /// <summary>
+        /// BGM音量変更
+        /// </summary>
+        /// <param name="volume"></param>
+        public void ChangeBGMVolume(float volume)
+        {
+            _basicData.BGMVolume = volume;
+            SetBGMVolume();
+        }
+
+        /// <summary>
+        /// SE音量変更
+        /// </summary>
+        /// <param name="volume"></param>
+        public void ChangeSEVolume(float volume)
+        {
+            _basicData.SEVolume = volume;
+            SetSEVolume();
         }
 
         /// <summary>
@@ -154,7 +181,7 @@ namespace TEMARI.Model
             _audioSourceBGM[play].clip = _audioClipBGM[index];
             _audioSourceBGM[play].Play();
             await DOTween.Sequence()
-                .Append(_audioSourceBGM[play].DOFade(_BGMVolume, CrossFadeTime).SetEase(Ease.Linear))
+                .Append(_audioSourceBGM[play].DOFade(_basicData.BGMVolume, CrossFadeTime).SetEase(Ease.Linear))
                 .Join(_audioSourceBGM[stop].DOFade(0, CrossFadeTime).SetEase(Ease.Linear));
 
             _audioSourceBGM[stop].Stop();
