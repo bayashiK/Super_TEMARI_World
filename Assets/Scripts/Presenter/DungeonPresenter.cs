@@ -23,8 +23,7 @@ namespace TEMARI.Presenter
         /// <summary>タイトルバック確認ダイアログ</summary>
         [SerializeField] private View.NoticeDialogue _noticeDialogue;
 
-        [SerializeField] private SDBase _sd1;
-        [SerializeField] private SDBase _sd2;
+        [SerializeField] private BattleManager _battleManager;
 
         protected override void Init()
         {
@@ -46,26 +45,20 @@ namespace TEMARI.Presenter
             _startButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
                 .Subscribe(_ => {
-                    _sd1.StartMove();
-                    _sd2.StartMove();
+                    _battleManager.StartRun();
                 })
                 .AddTo(this);
 
             _attackButton.OnButtonClicked
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
                 .Subscribe(_ => {
-                    _sd1.Attack();
+                    _battleManager.Attack();
                 })
                 .AddTo(this);
 
             //マニー所持数変化
             baseModel.BasicData.OnMoneyChanged
                 .Subscribe(async x => await _headerManager.UpdateMoneyDisp(x))
-                .AddTo(this);
-
-            //満腹度変化通知
-            baseModel.BasicData.OnFullnessChanged
-                .Subscribe(async x => await _headerManager.UpdateFullnessMeter(x, x / (float)DB.BasicData.MaxFullness))
                 .AddTo(this);
 
             //ヘッダーの表示初期化

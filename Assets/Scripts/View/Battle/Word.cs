@@ -16,10 +16,11 @@ namespace TEMARI.View
         [SerializeField] private TextMeshProUGUI _text;
         [SerializeField] private Image _image;
         [SerializeField] private BoxCollider2D _collider;
-        private const float MinWidth = 500f;
+        private const float MinWidth = 512f;
         private Vector3 _speed;
         private float _scale;
         private RectTransform _rect;
+        public int Attack { private set; get; }
 
         /// <summary>
         /// 初期化
@@ -28,12 +29,13 @@ namespace TEMARI.View
         /// <param name="text"></param>
         /// <param name="dest"></param>
         /// <param name="speed"></param>
-        public void Init(BoxCollider2D collider, string text, float dest, float speed)
+        public void Init(BoxCollider2D collider, string text, float dest, float speed, int attack)
         {
             Physics2D.IgnoreCollision(_collider, collider, true); //生成元との衝突判定を無効化
             _text.text = text;
-            var width = Mathf.Clamp(_text.preferredWidth, 0, MinWidth) + 50f;
-            var height = _text.preferredHeight + 50f;
+            Attack = attack;
+            var width = Mathf.Clamp(_text.preferredWidth + 150f, MinWidth, 1000);
+            var height = _text.preferredHeight + 80f;
             var size = new Vector2(width, height);
             _image.rectTransform.sizeDelta = size;
             _collider.size = size;
@@ -42,7 +44,7 @@ namespace TEMARI.View
             _scale = _rect.localScale.x;
             var dist = Mathf.Abs(dest - _rect.localPosition.x);
             //Debug.Log($"destination:{dest}, posx:{_rect.localPosition.x}, distance:{dist}, speed:{speed}");
-            _rect.DOLocalMoveX(dest, dist / speed);
+            _rect.DOLocalMoveX(dest, dist / speed).SetEase(Ease.Linear);
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace TEMARI.View
         {
             _rect.DOKill();
             _collider.enabled = false;
-            await _rect.DOScale(1.3f * _scale, 0.05f);
+            await _rect.DOScale(1.3f * _scale, 0.05f).SetEase(Ease.InBack);
             Destroy(this.gameObject);
         }
     }

@@ -18,6 +18,6 @@ MonoBehaviour:
   _weight: 51
   _attack: 1
   _mental: 10
-  _textSpeedInt: 0
-  _BGMVolume: 0
-  _SEVolume: 0
+  _textSpeedInt: 2
+  _BGMVolume: 0.32929447
+  _SEVolume: 0.5

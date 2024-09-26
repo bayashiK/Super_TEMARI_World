@@ -126,11 +126,6 @@ namespace TEMARI.Presenter
                 .Subscribe(async x => await _headerManager.UpdateMoneyDisp(x))
                 .AddTo(this);
 
-            //満腹度変化通知
-            baseModel.BasicData.OnFullnessChanged
-                .Subscribe(async x => await _headerManager.UpdateFullnessMeter(x, x / (float)DB.BasicData.MaxFullness))
-                .AddTo(this);
-
             //ヘッダーの表示初期化
             _headerManager.Init(baseModel.BasicData.Money.ToString("N0"), baseModel.BasicData.Fullness, baseModel.BasicData.Fullness / (float)DB.BasicData.MaxFullness);
 
