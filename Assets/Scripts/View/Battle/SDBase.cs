@@ -2,13 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
-using UniRx.Triggers;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Threading;
 using UnityEngine.AddressableAssets;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime;
+using TEMARI.Model;
 
 namespace TEMARI.View
 {
@@ -31,9 +30,6 @@ namespace TEMARI.View
 
         /// <summary> 被弾時や気絶時のエフェクト管理 </summary>
         [SerializeField] protected EffectManager effectManager;
-
-        /// <summary> HPゲージ管理 </summary>
-        [SerializeField] protected MeterManager HPMeter;
 
         /// <summary> 言葉攻撃プレハブの参照 </summary>
         [SerializeField] protected AssetReferenceGameObject wordPrefab;
@@ -63,7 +59,7 @@ namespace TEMARI.View
         [SerializeField] protected float downTime = 3;
 
         /// <summary> コライダー </summary>
-        private BoxCollider2D _collider;
+        protected BoxCollider2D _collider;
 
         /// <summary> デフォルトのy座標 </summary>
         protected float defaultY;
@@ -83,19 +79,27 @@ namespace TEMARI.View
         /// <summary> 無敵状態フラグ </summary>
         protected bool isInvincible = false;
 
+        /// <summary> ダメージ通知イベント </summary>
+        public IObservable<int> OnDamaged => onDamaged;
+        protected Subject<int> onDamaged = new();
+
         /// <summary> 勝敗通知イベント </summary>
         public IObservable<bool> Result => result;
         protected Subject<bool> result = new();
 
+        /// <summary> 気絶通知イベント </summary>
+        public IObservable<float> OnDown => onDown;
+        protected Subject<float> onDown = new();
+
         /// <summary> 語彙 </summary>
         protected List<string> wordList = new();
 
-        public RectTransform Rect { private set; get; }
+        public RectTransform Rect { get; private set; }
 
         protected CancellationTokenSource cts = new CancellationTokenSource();
         protected CancellationTokenSource ctsDown = new CancellationTokenSource();
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             _collider = this.GetComponent<BoxCollider2D>();
             Rect = this.transform as RectTransform;
@@ -106,7 +110,18 @@ namespace TEMARI.View
         protected virtual void Start()
         {
             SetActive(SpriteType.Run);
-            HPMeter.Init(hp);
+        }
+
+        /// <summary>
+        /// 初期位置にリセット
+        /// </summary>
+        public void ResetPosition()
+        {
+            Rect.localPosition = new Vector2(startLine, defaultY);
+            isKnockBack = false;
+            isDown = false;
+            isInvincible = false;
+            SetActive(SpriteType.Run);
         }
         
         /// <summary>
@@ -175,6 +190,16 @@ namespace TEMARI.View
             return startLine;
         }
 
+        public int GetHp()
+        {
+            return hp;
+        }
+
+        public int GetAttack()
+        {
+            return attack;
+        }
+
         /// <summary>
         /// 指定したスプライト以外を非表示にする
         /// </summary>
@@ -203,7 +228,7 @@ namespace TEMARI.View
         /// 言葉攻撃プレハブの生成
         /// </summary>
         /// <returns></returns>
-        protected async UniTask InstantiateWord()
+        protected virtual async UniTask InstantiateWord()
         {
             var obj = await wordPrefab.InstantiateAsync(this.transform.parent);
             //obj.transform.SetSiblingIndex(this.transform.GetSiblingIndex() + 1);
@@ -272,6 +297,7 @@ namespace TEMARI.View
         protected async UniTask Down()
         {
             isDown = true;
+            onDown.OnNext(downTime);
             ctsDown = new();
             SetActive(SpriteType.Down);
             effectManager.Play(EffectType.Stun);
@@ -321,6 +347,67 @@ namespace TEMARI.View
         }
 
         /// <summary>
+        /// 言葉攻撃被弾
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        protected async UniTask HitWord(GameObject obj)
+        {
+            var word = obj.GetComponent<Word>();
+            int damage = Mathf.Clamp(word.Attack - defence, 1, hp);
+            hp = Mathf.Clamp(hp - damage, 0, hp);
+            onDamaged.OnNext(hp);
+            effectManager.Play(EffectType.Hit);
+            if (isDown)
+            {
+                SoundManager.Instance.PlaySE(SoundManager.SEType.Critical);
+            }
+            else
+            {
+                SoundManager.Instance.PlaySE(SoundManager.SEType.Damage);
+            }
+
+            if (hp <= 0)
+            {
+                cts.Cancel();
+                ctsDown.Cancel();
+                SetResult(false);
+            }
+            else
+            {
+                await KnockBack(knockBackWord, cts.Token);
+            }
+        }
+
+        /// <summary>
+        /// 体当たり被弾
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        protected async virtual UniTask HitBody(GameObject obj)
+        {
+            if (isDown)
+            {
+                var enemy = obj.GetComponent<SDBase>();
+                int damage = Mathf.Clamp(enemy.GetAttack() - defence, 1, hp);
+                hp = Mathf.Clamp(hp - damage, 0, hp);
+                onDamaged.OnNext(hp);
+                effectManager.Play(EffectType.Hit);
+
+                if (hp <= 0)
+                {
+                    cts.Cancel();
+                    ctsDown.Cancel();
+                    SetResult(false);
+                }
+            }
+            else
+            {
+                await KnockBack(knockBackBody, cts.Token);
+            }
+        }
+
+        /// <summary>
         /// 接触時
         /// </summary>
         /// <param name="collision"></param>
@@ -338,35 +425,14 @@ namespace TEMARI.View
             cts = new();
             var obj = collision.gameObject;
 
-            if (obj.CompareTag("Word")) //言葉攻撃被弾
+            if (obj.CompareTag("Word") && !isInvincible) //言葉攻撃被弾
             {
-                var word = obj.GetComponent<Word>();
-                word.Burst();
-                if (!isInvincible)
-                {
-                    int damage = Mathf.Clamp(word.Attack - defence, 1, hp);
-                    hp -= damage;
-                    _ = HPMeter.DecreaseValueDelay(hp);
-                    effectManager.Play(EffectType.Hit);
-
-                    if (hp <= 0)
-                    {
-                        cts.Cancel();
-                        ctsDown.Cancel();
-                        SetResult(false);
-                    }
-                    else
-                    {
-                        await KnockBack(knockBackWord, cts.Token);
-                    }
-                }
+                
+                await HitWord(obj);
             }
-            else if (!isDown) //体当たり被弾
+            else if (!isDown && !isInvincible) //体当たり被弾
             {
-                if (!isInvincible)
-                {
-                    await KnockBack(knockBackBody, cts.Token);
-                }
+                await HitBody(obj);
             }
         }
     }

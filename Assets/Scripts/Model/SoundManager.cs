@@ -25,7 +25,10 @@ namespace TEMARI.Model
             Click = 0,
             Cancel,
             PopUp,
-            Enter
+            Enter,
+            Damage,
+            Critical,
+            BodyAttack
         }
 
         /// <summary> シングルトンインスタンス </summary>

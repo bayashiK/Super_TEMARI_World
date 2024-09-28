@@ -20,7 +20,7 @@ namespace TEMARI.View
         [SerializeField] private Image _valueDiff;
 
         /// <summary >メーターの初期値 </summary>
-        private int _defaultValue;
+        private float _defaultValue;
 
         /// <summary >現在のメーターの値(1～0の割合) </summary>
         private float _currentRatio = 1;
@@ -33,10 +33,10 @@ namespace TEMARI.View
         void Start()
         {
             _meterValue.DOFillAmount(1, 0);
-            _valueDiff.DOFillAmount(1, 0);
+            _valueDiff?.DOFillAmount(1, 0);
         }
 
-        public void Init(int value)
+        public void Init(float value)
         {
             _defaultValue = value;
             _currentRatio = 1;
@@ -45,9 +45,35 @@ namespace TEMARI.View
         /// <summary>
         /// メーターの表示を更新
         /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public async UniTask UpdateValue(float value)
+        {
+            var ratio = value / _defaultValue;
+            var ratioDiff = _currentRatio - ratio;
+            _ = _valueDiff?.DOFillAmount(ratio, ratioDiff * 2).SetEase(Ease.Linear);
+            await _meterValue.DOFillAmount(ratio, ratioDiff * 2).SetEase(Ease.Linear);
+        }
+
+        /// <summary>
+        /// メーターの表示を更新
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public async UniTask UpdateValue(float value, float time)
+        {
+            var ratio = value / _defaultValue;
+            _ = _valueDiff?.DOFillAmount(ratio, time).SetEase(Ease.Linear);
+            await _meterValue.DOFillAmount(ratio, time).SetEase(Ease.Linear);
+        }
+
+        /// <summary>
+        /// メーターの値を減少(差分を遅延表示)
+        /// </summary>
         /// <param name="ratio"></param>
         /// <returns></returns>
-        public async UniTask DecreaseValueDelay(int value)
+        public async UniTask DecreaseValueDelay(float value)
         {
             /*
             _valueDiff.color = ratio switch
@@ -59,14 +85,14 @@ namespace TEMARI.View
             */
             cts.Cancel();
             cts = new();
-            float ratio = (float)value / _defaultValue;
+            var ratio = value / _defaultValue;
             var ratioDiff = _currentRatio - ratio;
             try
             {
                 _ = _meterValue.DOFillAmount(ratio, ratioDiff / 10);
                 await UniTask.Delay(TimeSpan.FromSeconds(ratioDiff / 10 + 0.5f), cancellationToken: cts.Token);
-                _ = _valueDiff.DOFillAmount(ratio, ratioDiff);
-                await UniTask.Delay(TimeSpan.FromSeconds(ratioDiff), cancellationToken: cts.Token);
+                _ = _valueDiff.DOFillAmount(ratio, ratioDiff * 2);
+                await UniTask.Delay(TimeSpan.FromSeconds(ratioDiff * 2), cancellationToken: cts.Token);
                 _currentRatio = ratio;
             }
             catch (OperationCanceledException e)

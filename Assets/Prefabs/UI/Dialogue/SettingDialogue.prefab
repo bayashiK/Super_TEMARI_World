@@ -684,7 +684,7 @@ MonoBehaviour:
   m_text: "BGM\u97F3\u91CF"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
-  m_sharedMaterial: {fileID: -414910940068957748, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
+  m_sharedMaterial: {fileID: -9179574650716844717, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1221,7 +1221,7 @@ MonoBehaviour:
     \u901F"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
-  m_sharedMaterial: {fileID: -414910940068957748, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
+  m_sharedMaterial: {fileID: -9179574650716844717, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1652,7 +1652,7 @@ MonoBehaviour:
   m_text: "SE\u97F3\u91CF"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
-  m_sharedMaterial: {fileID: -414910940068957748, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
+  m_sharedMaterial: {fileID: -9179574650716844717, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1745,7 +1745,7 @@ PrefabInstance:
     - target: {fileID: 604331582835180261, guid: 128cda8401fe06b4ea25d0bbe923b635, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -414910940068957748, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
+      objectReference: {fileID: -9179574650716844717, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
     - target: {fileID: 604331582835180261, guid: 128cda8401fe06b4ea25d0bbe923b635, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -1757,7 +1757,7 @@ PrefabInstance:
     - target: {fileID: 1508274849950685359, guid: 128cda8401fe06b4ea25d0bbe923b635, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -414910940068957748, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
+      objectReference: {fileID: -9179574650716844717, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
     - target: {fileID: 1508274849950685359, guid: 128cda8401fe06b4ea25d0bbe923b635, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -1777,7 +1777,7 @@ PrefabInstance:
     - target: {fileID: 2089380407612627496, guid: 128cda8401fe06b4ea25d0bbe923b635, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -414910940068957748, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
+      objectReference: {fileID: -9179574650716844717, guid: 07c98644ef505234fab5e6f7c1521af9, type: 2}
     - target: {fileID: 2089380407612627496, guid: 128cda8401fe06b4ea25d0bbe923b635, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0

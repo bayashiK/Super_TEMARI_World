@@ -50,12 +50,17 @@ namespace TEMARI.View
         /// <summary>
         /// 破壊時の処理
         /// </summary>
-        public async void Burst()
+        private async void Burst()
         {
             _rect.DOKill();
             _collider.enabled = false;
             await _rect.DOScale(1.3f * _scale, 0.05f).SetEase(Ease.InBack);
             Destroy(this.gameObject);
+        }
+
+        protected void OnCollisionEnter2D(Collision2D collision)
+        {
+            Burst();
         }
     }
 }
